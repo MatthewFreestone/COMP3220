@@ -29,6 +29,16 @@ class AST
          self.setFirstChild(node) 
       end
    end  
+
+   def addAsFirstChild(node)
+      if (node == nil) then return nil end
+      t = @down
+      if (t != nil)
+         node.setNextSibling(t)
+      end
+      self.setFirstChild(node)
+   end
+
    
    def getFirstChild
       return @down

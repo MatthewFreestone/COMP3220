@@ -75,7 +75,7 @@ class Parser < Scanner
 
         if (@lookahead.type == Token::ADDOP || @lookahead.type == Token::SUBOP)
             operator = etail()
-            operator.addChild(t)
+            operator.addAsFirstChild(t)
             return operator
         end
         return t
@@ -85,7 +85,7 @@ class Parser < Scanner
         f = factor()
         if (@lookahead.type == Token::MULTOP || @lookahead.type == Token::DIVOP)
             operator = ttail()
-            operator.addChild(f)
+            operator.addAsFirstChild(f)
             return operator
         end
         return f
