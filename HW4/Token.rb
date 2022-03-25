@@ -36,5 +36,6 @@ class Token
      # return "[Type: #{@type} || Text: #{@text}]"
 	 #to string method that returns the token type and the lexeme stored inside this token
        return "#{@type} #{@text}"
+      #  return "#{@text}"
    end
 end
