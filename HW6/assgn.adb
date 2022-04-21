@@ -9,8 +9,10 @@ package body Assgn is
         G : Generator;
         X : Random_Range;
     begin
+        Arr(1) := 0;
+        Arr(2) := 0;
         Reset (G);
-        for i in 1 .. Arr'Length loop
+        for i in 3 .. Arr'Length loop
             X := Random(G);
             Arr(i) := X;
         end loop;
@@ -18,13 +20,16 @@ package body Assgn is
 
     procedure Reverse_Bin_Arr(Arr : in out BINARY_ARRAY) is
         A : Integer;
+        N : Integer;
     begin
-        -- Reverse the order of the elements in an array
-        -- for i in 1 .. Arr'Length / 2 loop
-        --     Arr(i) := Arr(i) xor Arr(Arr'Length - i + 1);
-        --     Arr(Arr'Length - i + 1) := Arr(i) xor Arr(Arr'Length - i + 1);
-        --     Arr(i) := Arr(i) xor Arr(Arr'Length - i + 1);
-        -- end loop;
+        -- Not sure if this is working correctly 
+        N := Arr'Length / 2;
+        for i in 1 .. N loop
+            A := Arr(i);
+            Arr(i) := Arr(Arr'Length - i + 1);
+            Arr(Arr'Length - i + 1) := A;
+        end loop;
+        
         A := 0;
     end Reverse_Bin_Arr;
 
@@ -37,37 +42,87 @@ package body Assgn is
     end Print_Bin_Arr;
 
     function Int_To_Bin(Num : in Integer) return BINARY_ARRAY is
-        B : BINARY_ARRAY := (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        Arr : BINARY_ARRAY := (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        N : Integer := Num;
     begin
-        return B;
         -- Convert an integer to a binary array
+        for i in reverse 1 .. Arr'Length loop
+            Arr(i) := N rem 2;
+            N := N / 2;
+        end loop;
+        return Arr;
     end Int_To_Bin;
+
     function Bin_To_Int(Arr : in BINARY_ARRAY) return Integer is
+        N : Integer := 0;
+        CURR : Integer := 1;
     begin
-        return 0;
+        -- Convert a binary array to an integer
+        for i in reverse 1 .. Arr'Length loop
+            N := N + (Arr(i) * CURR);
+            CURR := CURR * 2;
+        end loop;
+        return N;
     end Bin_To_Int;
+
     function "+" (Left, Right : in BINARY_ARRAY) return BINARY_ARRAY is
-        B : BINARY_ARRAY := (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        Result : BINARY_ARRAY := (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        l, r, c, res: BOOLEAN := False;
+        c_res : BINARY_NUMBER;
     begin
-        return B;
+        for i in reverse 1 .. Result'Length loop
+            if Left(i) = 1 then
+                l := True;
+            else 
+                l := False;
+            end if;
+
+            if Right(i) = 1 then
+                r := True;
+            else 
+                r := False;
+            end if;
+
+            res := l xor r xor c;
+            c := (c and (l xor r)) or (l and r);
+
+            if res = True then
+                c_res := 1;
+            else
+                c_res := 0;
+            end if;
+
+            Result(i) := c_res;
+        end loop;
+        return Result;
     end "+";
     function "+" (Left : in INTEGER; Right : in BINARY_ARRAY) return BINARY_ARRAY is
-        B : BINARY_ARRAY := (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        L_BIN : BINARY_ARRAY := Int_To_Bin(Left);
+        Result : BINARY_ARRAY;
     begin
-        return B;
-        --code 
+        Result := L_BIN + Right;
+        return Result;
     end "+";
+
     function "-" (Left, Right : in BINARY_ARRAY) return BINARY_ARRAY is
-        B : BINARY_ARRAY := (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        S_RIGHT : BINARY_ARRAY := (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        RESULT : BINARY_ARRAY;
+        CURR : INTEGER := 0 ;
     begin
-        return B;
-        --code 
+        for i in 1 .. Right'Length loop
+            S_RIGHT(i) := (1+Right(i)) rem 2;
+        end loop;
+        S_RIGHT := 1 + S_RIGHT;
+        -- S_RIGHT is in 2cns without its leading 1 bit.
+
+        RESULT := LEFT + S_RIGHT;
+
+        return RESULT;
     end "-";
     function "-" (Left : in INTEGER; Right : in BINARY_ARRAY) return BINARY_ARRAY is
-        B : BINARY_ARRAY := (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        L_BIN : BINARY_ARRAY := Int_To_Bin(Left);
     begin
-        return B;
-        --code 
+        return L_BIN - Right;
     end "-";
 
 
